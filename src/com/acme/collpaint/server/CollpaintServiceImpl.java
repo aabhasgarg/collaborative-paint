@@ -32,7 +32,7 @@ public class CollpaintServiceImpl extends RemoteServiceServlet
                                   implements CollPaintService {
 
     @Override
-    public void updateLine(int startX, int startY, int endX, int endY)
+    public void updateLine(float startX, float startY, float endX, float endY)
             throws CollPaintException {
         // Get or create the HTTP session for the browser
         HttpSession httpSession = getThreadLocalRequest().getSession();
@@ -40,11 +40,11 @@ public class CollpaintServiceImpl extends RemoteServiceServlet
         CometSession cometSession = CometServlet.getCometSession(httpSession);
         
         final LineUpdate lineUpdate = new LineUpdate();
-        lineUpdate.state = State.STARTED;
-        lineUpdate.startX = 12;
-        lineUpdate.startY = 20;
-        lineUpdate.endX = 12;
-        lineUpdate.endY = 30;
+        lineUpdate.setState(State.STARTED);
+        lineUpdate.setStartX(startX);
+        lineUpdate.setStartY(startY);
+        lineUpdate.setEndX(endX);
+        lineUpdate.setEndY(endY);
         
         cometSession.enqueue(lineUpdate);
     }

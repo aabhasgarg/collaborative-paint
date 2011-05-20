@@ -20,7 +20,7 @@ package com.acme.collpaint.client;
 public class CollPaintException extends Exception {
     
     public CollPaintException() {
-        
+        super();
     }
 
 }

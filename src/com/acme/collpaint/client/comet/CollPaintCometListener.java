@@ -6,9 +6,8 @@ package com.acme.collpaint.client.comet;
 import java.io.Serializable;
 import java.util.List;
 
-import org.mortbay.log.Log;
-
 import com.acme.collpaint.client.LineUpdate;
+import com.allen_sauer.gwt.log.client.Log;
 
 import net.zschech.gwt.comet.client.CometListener;
 

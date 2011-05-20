@@ -22,6 +22,6 @@ import net.zschech.gwt.comet.client.SerialTypes;
  * @date May 20, 2011 11:37:39 PM 
  *
  */
-@SerialTypes(LineUpdate.class)
+@SerialTypes({ LineUpdate.class })
 public abstract class CollPaintCometSerializer extends CometSerializer {
 }

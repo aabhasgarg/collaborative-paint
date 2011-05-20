@@ -25,15 +25,15 @@ public class LineUpdate implements Serializable {
     
     private static final long serialVersionUID = -7456299417172643586L;
     
-    public int userId;
-    public int lineId;
-    public State state;
+    private int userId;
+    private int lineId;
+    private State state = State.STARTED;
     
-    public float width;
-    public float startX;
-    public float startY;
-    public float endX;
-    public float endY;
+    private float width;
+    private float startX;
+    private float startY;
+    private float endX;
+    private float endY;
     
     public String info() {
         return  "u: " + userId +
@@ -45,5 +45,69 @@ public class LineUpdate implements Serializable {
                " ex: " + endX +
                " ey: " + endY;
      }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getLineId() {
+        return lineId;
+    }
+
+    public void setLineId(int lineId) {
+        this.lineId = lineId;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getStartX() {
+        return startX;
+    }
+
+    public void setStartX(float startX) {
+        this.startX = startX;
+    }
+
+    public float getStartY() {
+        return startY;
+    }
+
+    public void setStartY(float startY) {
+        this.startY = startY;
+    }
+
+    public float getEndX() {
+        return endX;
+    }
+
+    public void setEndX(float endX) {
+        this.endX = endX;
+    }
+
+    public float getEndY() {
+        return endY;
+    }
+
+    public void setEndY(float endY) {
+        this.endY = endY;
+    }
 
 }

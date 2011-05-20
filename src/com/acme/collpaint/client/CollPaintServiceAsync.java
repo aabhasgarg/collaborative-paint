@@ -21,8 +21,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface CollPaintServiceAsync {
 
-    public void updateLine(int startX, int startY,
-                           int endX, int endY,
+    public void updateLine(float startX, float startY,
+                           float endX, float endY,
                            AsyncCallback<Void> callback);
     
 }
