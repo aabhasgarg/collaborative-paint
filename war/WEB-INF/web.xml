@@ -28,7 +28,7 @@
     <!-- the comet servlet for streaming messages to the client -->
     <servlet>
         <servlet-name>collpaintComet</servlet-name>
-        <servlet-class>com.acme.collpaint.server.CometServlet</servlet-class>
+        <servlet-class>net.zschech.gwt.comet.server.CometServlet</servlet-class>
     </servlet>  
   
     <servlet-mapping>
@@ -37,7 +37,7 @@
     </servlet-mapping>
   
     <servlet-mapping>
-        <servlet-name>chatComet</servlet-name>
+        <servlet-name>collpaintComet</servlet-name>
         <url-pattern>/collpaint/comet</url-pattern>
     </servlet-mapping>
   

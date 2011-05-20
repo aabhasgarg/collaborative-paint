@@ -21,7 +21,7 @@ import java.io.Serializable;
  */
 public class LineUpdate implements Serializable {
     
-    public enum State { UPDATING, FINISHED }
+    public enum State { STARTED, UPDATING, FINISHED }
     
     private static final long serialVersionUID = -7456299417172643586L;
     
