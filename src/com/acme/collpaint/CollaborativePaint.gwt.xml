@@ -2,7 +2,7 @@
 <module rename-to='CollaborativePaint'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>   
-  <inherits name="com.google.gwt.i18n.I18N" />
+  <inherits name="com.google.gwt.i18n.I18N" />  
   
   <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" />  
   
@@ -15,7 +15,7 @@
 
   <!-- Other module inherits                                      -->
   
-  <!-- <inherits name="net.zschech.gwt.comet.Comet" /> -->  
+  <inherits name="net.zschech.gwt.comet.Comet" />  
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.acme.collpaint.client.CollaborativePaint'/>

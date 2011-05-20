@@ -5,8 +5,40 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
          version="2.5">
   
-  <welcome-file-list>
-    <welcome-file>CollaborativePaint.html</welcome-file>
-  </welcome-file-list>
+    <welcome-file-list>
+        <welcome-file>CollaborativePaint.html</welcome-file>
+    </welcome-file-list>
+  
+    <!-- Listener for shutting down the comet processor when the ServletContext is destroyed -->
+    <listener>
+        <listener-class>net.zschech.gwt.comet.server.CometServletContextListener</listener-class>
+    </listener>
+  
+    <!-- Listener for invalidating CometSessions when HTTPSessions are invalidated -->
+    <listener>
+        <listener-class>net.zschech.gwt.comet.server.CometHttpSessionListener</listener-class>
+    </listener>
+  
+    <!-- the RPC service called by the client -->
+    <servlet>
+        <servlet-name>collpaintService</servlet-name>
+        <servlet-class>com.acme.collpaint.server.CollpaintServiceImpl</servlet-class>
+    </servlet>
+
+    <!-- the comet servlet for streaming messages to the client -->
+    <servlet>
+        <servlet-name>collpaintComet</servlet-name>
+        <servlet-class>com.acme.collpaint.server.CometServlet</servlet-class>
+    </servlet>  
+  
+    <servlet-mapping>
+        <servlet-name>collpaintService</servlet-name>
+        <url-pattern>/collpaint/srv</url-pattern>
+    </servlet-mapping>
+  
+    <servlet-mapping>
+        <servlet-name>chatComet</servlet-name>
+        <url-pattern>/collpaint/comet</url-pattern>
+    </servlet-mapping>
   
 </web-app>
