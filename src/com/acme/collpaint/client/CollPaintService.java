@@ -6,6 +6,7 @@ package com.acme.collpaint.client;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+
 /**
  * <dl>
  * <dt>Project:</dt> <dd>collaborative-paint</dd>
@@ -20,7 +21,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * @date May 20, 2011 11:47:55 PM 
  *
  */
-@RemoteServiceRelativePath("collpaint/chat")
+@RemoteServiceRelativePath("service")
 public interface CollPaintService extends RemoteService {
     
     public void updateLine(double startX, double startY,

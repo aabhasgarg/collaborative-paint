@@ -33,12 +33,12 @@
   
     <servlet-mapping>
         <servlet-name>collpaintService</servlet-name>
-        <url-pattern>/collpaint/srv</url-pattern>
+        <url-pattern>/CollaborativePaint/service</url-pattern>
     </servlet-mapping>
   
     <servlet-mapping>
         <servlet-name>collpaintComet</servlet-name>
-        <url-pattern>/collpaint/comet</url-pattern>
+        <url-pattern>/CollaborativePaint/comet</url-pattern>
     </servlet-mapping>
   
 </web-app>

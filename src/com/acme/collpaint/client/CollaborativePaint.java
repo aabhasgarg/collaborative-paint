@@ -18,9 +18,11 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class CollaborativePaint implements EntryPoint {
     
+    public static final String COMET_PATH = GWT.getModuleBaseURL() + "comet";
+    
 	public void onModuleLoad() {
 	    CometSerializer serializer = GWT.create(CollPaintCometSerializer.class);
-	    CometClient client = new CometClient("/collpaint/comet", serializer,
+	    CometClient client = new CometClient(COMET_PATH, serializer,
 	                                         new CollPaintCometListener());
 	    client.start();
 	    
