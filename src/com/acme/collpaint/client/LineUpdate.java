@@ -29,11 +29,11 @@ public class LineUpdate implements Serializable {
     private int lineId;
     private State state = State.STARTED;
     
-    private float width;
-    private float startX;
-    private float startY;
-    private float endX;
-    private float endY;
+    private double width;
+    private double startX;
+    private double startY;
+    private double endX;
+    private double endY;
     
     public String info() {
         return  "u: " + userId +
@@ -70,43 +70,43 @@ public class LineUpdate implements Serializable {
         this.state = state;
     }
 
-    public float getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public void setWidth(float width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
-    public float getStartX() {
+    public double getStartX() {
         return startX;
     }
 
-    public void setStartX(float startX) {
+    public void setStartX(double startX) {
         this.startX = startX;
     }
 
-    public float getStartY() {
+    public double getStartY() {
         return startY;
     }
 
-    public void setStartY(float startY) {
+    public void setStartY(double startY) {
         this.startY = startY;
     }
 
-    public float getEndX() {
+    public double getEndX() {
         return endX;
     }
 
-    public void setEndX(float endX) {
+    public void setEndX(double endX) {
         this.endX = endX;
     }
 
-    public float getEndY() {
+    public double getEndY() {
         return endY;
     }
 
-    public void setEndY(float endY) {
+    public void setEndY(double endY) {
         this.endY = endY;
     }
 

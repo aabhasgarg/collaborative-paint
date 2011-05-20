@@ -32,7 +32,7 @@ public class CollpaintServiceImpl extends RemoteServiceServlet
                                   implements CollPaintService {
 
     @Override
-    public void updateLine(float startX, float startY, float endX, float endY)
+    public void updateLine(double startX, double startY, double endX, double endY)
             throws CollPaintException {
         // Get or create the HTTP session for the browser
         HttpSession httpSession = getThreadLocalRequest().getSession();

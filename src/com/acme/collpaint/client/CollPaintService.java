@@ -23,7 +23,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("collpaint/chat")
 public interface CollPaintService extends RemoteService {
     
-    public void updateLine(float startX, float startY,
-                           float endX, float endY) throws CollPaintException;
+    public void updateLine(double startX, double startY,
+                           double endX, double endY) throws CollPaintException;
     
 }
