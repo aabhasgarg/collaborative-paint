@@ -2,4 +2,6 @@
 .project
 .settings/
 .gwt/
+war/CollaborativePaint
 war/WEB-INF/classes
+war/WEB-INF/deploy
