@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.user.client.Window;
 import net.zschech.gwt.comet.client.CometListener;
 
 import com.acme.collpaint.client.LineUpdate;
@@ -27,6 +26,16 @@ import com.acme.collpaint.client.LineUpdate;
  *
  */
 public class CollPaintCometListener implements CometListener {
+    
+    public static interface CollPaintEventsReceiver {
+        void onLineUpdated(LineUpdate update);        
+    }
+    
+    private final CollPaintEventsReceiver receiver;
+    
+    public CollPaintCometListener(CollPaintEventsReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     @Override
     public void onConnected(int heartbeat) {
@@ -52,14 +61,11 @@ public class CollPaintCometListener implements CometListener {
     public void onMessage(List<? extends Serializable> messages) {
         for (Serializable message: messages) {
             if (message instanceof LineUpdate) {
-                LineUpdate update = (LineUpdate)message;
-                Window.alert("Received line update " + update.info());
-                Log.debug("Received line update: " + update.info());
+                receiver.onLineUpdated((LineUpdate)message);
             } else {
                 Log.debug("Received message: " + message.toString());
             }
-        }
-        
+        }        
     }
 
     @Override
