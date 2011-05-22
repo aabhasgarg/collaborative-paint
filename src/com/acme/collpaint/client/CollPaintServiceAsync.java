@@ -30,5 +30,5 @@ public interface CollPaintServiceAsync {
     public void login(String username, AsyncCallback<Void> callback);
     public void logout(String username, AsyncCallback<Void> callback);
     public void sendToAll(MessageWithAuthor message, AsyncCallback<Void> callback);
-    
+
 }

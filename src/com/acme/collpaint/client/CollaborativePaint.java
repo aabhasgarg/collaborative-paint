@@ -28,7 +28,17 @@ public class CollaborativePaint implements EntryPoint {
 	    CometSerializer serializer = GWT.create(CollPaintCometSerializer.class);
 	    CometClient client = new CometClient(COMET_PATH, serializer,
 	                                         new CollPaintCometListener());
-	    client.start();	    	    
+	    client.start();
+	    
+	    /* service.getUsername(new HandlingCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                if (result != null && !result.isEmpty()) {
+                    loggedIn = true;
+                    whenLoggedIn(result);
+                }
+            }
+        }); */
 	    
 	    final String username = Window.prompt("Login", "Enter Username");
 	    if (username == null || username.isEmpty()) {
@@ -36,16 +46,10 @@ public class CollaborativePaint implements EntryPoint {
 	        return;
 	    }
 	    
-	    service.login(username, new AsyncCallback<Void>() {
-	        
-            @Override
-            public void onSuccess(Void result) {
+	    service.login(username, new HandlingCallback<Void>() {	        
+            @Override public void onSuccess(Void result) {
                 whenLoggedIn(username);
-            }
-            
-            @Override
-            public void onFailure(Throwable caught) { handle(caught); }
-	        
+            }	        
 	    });
 	    
 	}
@@ -63,16 +67,17 @@ public class CollaborativePaint implements EntryPoint {
 	
 	protected void tryToUpdateLine(double startX, double startY, double endX, double endY) {
 	    service.updateLine(startX, startY, endX, endY, 
-                new AsyncCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) { }
-                    
-                    @Override
-                    public void onFailure(Throwable caught) { handle(caught); }
+                new HandlingCallback<Void>() {
+                    @Override public void onSuccess(Void result) { }                    
                 });	    
+	}
+	
+	protected abstract class HandlingCallback<T> implements AsyncCallback<T> {
+	    @Override public void onFailure(Throwable caught) { handle(caught); };
 	}
 	
 	protected void handle(Throwable error) {
 	    Log.error(error.getMessage());
+	    Window.alert(error.getMessage());
 	}
 }
