@@ -2,6 +2,33 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
 
-    <gwt:FlowPanel />
+    <gwt:VerticalPanel>
+        
+        <gwt:cell height="10%">
+            <gwt:FlowPanel>
+                <gwt:Label ui:field="loginStatus" />
+                <gwt:Button ui:field="logout" text="Logout" />
+            </gwt:FlowPanel>
+        </gwt:cell>
+        
+        <gwt:cell height="20%"> <!-- toolbar -->
+            <gwt:HorizontalPanel>
+                <gwt:cell>
+                    <gwt:Button ui:field="clearCanvas" text="Clear" />
+                </gwt:cell>
+                <gwt:cell>
+                    <gwt:FlowPanel ui:field="colors" />
+                </gwt:cell>
+                <gwt:cell>
+                    <gwt:ListBox ui:field="thickness" visibleItemCount="1" multipleSelect="false" />
+                </gwt:cell>                
+            </gwt:HorizontalPanel>
+        </gwt:cell>
+        
+        <gwt:cell height="70%">
+            <gwt:FlowPanel ui:field="canvasHolder" />
+        </gwt:cell>
+        
+    </gwt:VerticalPanel>
 
 </ui:UiBinder> 
