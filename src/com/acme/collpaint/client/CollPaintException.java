@@ -3,6 +3,8 @@
  */
 package com.acme.collpaint.client;
 
+import com.acme.collpaint.client.comet.CometSessionException;
+
 /**
  * <dl>
  * <dt>Project:</dt> <dd>collaborative-paint</dd>
@@ -17,10 +19,10 @@ package com.acme.collpaint.client;
  * @date May 20, 2011 11:17:41 PM 
  *
  */
-public class CollPaintException extends Exception {
+public class CollPaintException extends CometSessionException {
     
-    public CollPaintException() {
-        super();
+    public CollPaintException(String message) {
+        super(message);
     }
 
 }

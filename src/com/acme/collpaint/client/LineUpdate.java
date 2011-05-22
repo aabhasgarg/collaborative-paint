@@ -5,6 +5,8 @@ package com.acme.collpaint.client;
 
 import java.io.Serializable;
 
+import com.acme.collpaint.client.comet.CometSessionsSupport.MessageWithAuthor;
+
 /**
  * <dl>
  * <dt>Project:</dt> <dd>collaborative-paint</dd>
@@ -19,13 +21,13 @@ import java.io.Serializable;
  * @date May 20, 2011 11:20:09 PM 
  *
  */
-public class LineUpdate implements Serializable {
+public class LineUpdate implements Serializable, MessageWithAuthor {
     
     public enum State { STARTED, UPDATING, FINISHED }
     
     private static final long serialVersionUID = -7456299417172643586L;
     
-    private int userId;
+    private String author;
     private int lineId;
     private State state = State.STARTED;
     
@@ -36,7 +38,7 @@ public class LineUpdate implements Serializable {
     private double endY;
     
     public String info() {
-        return  "u: " + userId +
+        return  "u: " + author +
                " l: " + lineId +
                " s: " + state.name() +
                " w: " + width +
@@ -46,12 +48,12 @@ public class LineUpdate implements Serializable {
                " ey: " + endY;
      }
 
-    public int getUserId() {
-        return userId;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public int getLineId() {

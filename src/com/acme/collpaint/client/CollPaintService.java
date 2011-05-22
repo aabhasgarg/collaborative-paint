@@ -3,6 +3,8 @@
  */
 package com.acme.collpaint.client;
 
+import com.acme.collpaint.client.comet.CometSessionException;
+import com.acme.collpaint.client.comet.CometSessionsSupport;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -22,9 +24,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  *
  */
 @RemoteServiceRelativePath("service")
-public interface CollPaintService extends RemoteService {
+public interface CollPaintService extends RemoteService, CometSessionsSupport {
     
     public void updateLine(double startX, double startY,
-                           double endX, double endY) throws CollPaintException;
+                           double endX, double endY) throws CometSessionException, CollPaintException;
     
 }
