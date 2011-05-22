@@ -29,11 +29,10 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     public interface Display {
         void updateLoginStatus(String username);
         
-        void disableControls();
-        void enableControls();
+        void enableControls(boolean enable);
         void prepareCanvas();
         
-        void setUpdatesSender(UpdatesSender updatesSender);
+        void setUpdatesSender(UpdatesSender sender);
         void drawUpdate(LineUpdate update);
     }
     
@@ -51,7 +50,7 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     }
 
     public void launch() {
-        view.disableControls();        
+        view.enableControls(false);        
         view.updateLoginStatus(null);
         
         // TODO: restore session if it exists
@@ -71,8 +70,6 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     
     protected void whenLoggedIn(String username) {
         view.updateLoginStatus(username);
-        view.enableControls();
-        view.prepareCanvas();
         view.setUpdatesSender(new UpdatesSender() {
 
             @Override
@@ -81,6 +78,8 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
             }
             
         });
+        view.enableControls(true);        
+        view.prepareCanvas();
     }
     
     @Override

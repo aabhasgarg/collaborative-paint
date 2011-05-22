@@ -20,7 +20,7 @@
                     <gwt:FlowPanel ui:field="colors" />
                 </gwt:cell>
                 <gwt:cell>
-                    <gwt:ListBox ui:field="thickness" visibleItemCount="1" multipleSelect="false" />
+                    <gwt:ListBox ui:field="thicknessBox" visibleItemCount="1" multipleSelect="false" />
                 </gwt:cell>                
             </gwt:HorizontalPanel>
         </gwt:cell>

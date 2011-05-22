@@ -23,7 +23,7 @@ import com.acme.collpaint.client.comet.CometSessionsSupport.MessageWithAuthor;
  */
 public class LineUpdate implements Serializable, MessageWithAuthor {
     
-    public enum State { DRAWING, FINISHED }
+    public enum State { DRAWING, FINISHED };
     
     private static final long serialVersionUID = -7456299417172643586L;
     
@@ -31,7 +31,12 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
     private int lineId;
     private State state = State.DRAWING;
     
-    private double width;
+    private double thickness;
+    
+    private double red;
+    private double green;
+    private double blue;
+    
     private double startX;
     private double startY;
     private double endX;
@@ -41,7 +46,10 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
         return  "u: " + author +
                " l: " + lineId +
                " s: " + state.name() +
-               " w: " + width +
+               " w: " + thickness +
+               " cr: " + red +
+               " cb: " + blue +
+               " cg: " + green +               
                " sx: " + startX +
                " sy: " + startY +
                " ex: " + endX +
@@ -72,24 +80,25 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
         this.state = state;
     }
 
-    public double getWidth() {
-        return width;
+    public double getThickness() {
+        return thickness;
     }
 
-    public void setWidth(double width) {
-        this.width = width;
+    public void setThickness(double width) {
+        this.thickness = width;
     }
 
     public double getStartX() {
         return startX;
     }
-
-    public void setStartX(double startX) {
-        this.startX = startX;
-    }
-
+    
     public double getStartY() {
         return startY;
+    }
+
+    public void setStart(double startX, double startY) {
+        this.startX = startX;
+        this.startY = startY;
     }
 
     public void setStartY(double startY) {
@@ -100,16 +109,31 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
         return endX;
     }
 
-    public void setEndX(double endX) {
-        this.endX = endX;
-    }
-
     public double getEndY() {
         return endY;
     }
 
-    public void setEndY(double endY) {
+    public void setEnd(double endX, double endY) {
+        this.endX = endX;
         this.endY = endY;
+    }
+    
+    public double getRed() { 
+        return red;
+    }
+    
+    public double getBlue() { 
+        return blue;
+    }    
+    
+    public double getGreen() { 
+        return green;
+    }
+    
+    public void setColor(double red, double blue, double green) {
+        this.red = red;
+        this.blue = blue;
+        this.green = green;
     }
 
 }
