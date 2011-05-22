@@ -5,10 +5,14 @@
     <gwt:VerticalPanel>
         
         <gwt:cell height="10%">
-            <gwt:FlowPanel>
-                <gwt:Label ui:field="loginStatus" />
-                <gwt:Button ui:field="logout" text="Logout" />
-            </gwt:FlowPanel>
+            <gwt:HorizontalPanel>
+                <gwt:cell>
+                    <gwt:Label ui:field="loginStatus" />
+                </gwt:cell>
+                <gwt:cell>
+                    <gwt:Button ui:field="logout" text="Logout" />
+                </gwt:cell>                
+            </gwt:HorizontalPanel>
         </gwt:cell>
         
         <gwt:cell height="20%"> <!-- toolbar -->

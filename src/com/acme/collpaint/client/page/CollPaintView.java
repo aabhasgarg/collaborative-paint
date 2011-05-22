@@ -96,10 +96,11 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
 
     @Override
     public void enableControls(boolean enable) {
+        clearCanvas.setEnabled(enable);
         thicknessBox.setEnabled(enable);
         for (Widget child: colors) {
             if (child instanceof Button) ((Button) child).setEnabled(enable); 
-        }        
+        }
     }
 
     @Override
