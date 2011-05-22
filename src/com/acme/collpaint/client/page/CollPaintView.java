@@ -9,6 +9,7 @@ import java.util.Map;
 import com.acme.collpaint.client.Line;
 import com.acme.collpaint.client.LineUpdate;
 import com.acme.collpaint.client.page.CollPaintPresenter.UpdatesSender;
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -191,6 +192,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                     startNewLine(event.getRelativeX(canvas.getElement()),
                                  event.getRelativeY(canvas.getElement()))
                 );
+                event.preventDefault();
             }
         });
         
@@ -200,6 +202,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                     updateCurrentLine(event.getRelativeX(canvas.getElement()),
                                       event.getRelativeY(canvas.getElement()))
                 );
+                event.preventDefault();                
             }
         });
         
@@ -207,8 +210,9 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
             @Override public void onMouseUp(MouseUpEvent event) {
                 sender.lineFinished(
                     finishCurrentLine(event.getRelativeX(canvas.getElement()),
-                                      event.getRelativeY(canvas.getElement()))    
+                                      event.getRelativeY(canvas.getElement()))                                      
                 );
+                event.preventDefault();                
             }
         });
         
@@ -218,6 +222,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                     finishCurrentLine(event.getRelativeX(canvas.getElement()),
                                       event.getRelativeY(canvas.getElement()))    
                 );
+                event.preventDefault();                
             }
         });        
         
@@ -256,6 +261,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     
     @Override
     public void drawUpdate(LineUpdate update) {
+        Log.debug("Will draw this: " + update.info());
         drawnLines.put(update.getAuthor() + "/"
                        + update.getLineId(), 
                        update.getSource());
@@ -269,15 +275,17 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     @Override
     public HasClickHandlers getLogoutButton() { return logout; }
     
-    private Line startNewLine(int startX, int startY) {
+    private Line startNewLine(int startX, int startY) {        
         if (currentLine != null) return null;
         lastLineId += 1;
         final Line newLine = new Line();
+        newLine.setAuthor(currentUser);
         newLine.setLineId(lastLineId);
         newLine.setColor(curColor.r, curColor.g, curColor.b);
         newLine.setThickness(curThickness.value);
         newLine.setStart(startX, startY);
         newLine.setEnd(startX, startY);
+        Log.debug("Started line " + newLine.info());        
         currentLine = newLine;        
         return currentLine;
     }
@@ -285,6 +293,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     private Line updateCurrentLine(int endX, int endY) {
         if (currentLine == null) return null;
         currentLine.setEnd(endX, endY);
+        Log.debug("Updated line " + currentLine.info());        
         return currentLine;
     }
 
@@ -296,6 +305,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
             drawnLines.put(currentUser + "/" + finishedLine.getLineId(), 
                            finishedLine);
         }
+        Log.debug("Finished line " + finishedLine.info());        
         currentLine = null;
         return finishedLine;
     }

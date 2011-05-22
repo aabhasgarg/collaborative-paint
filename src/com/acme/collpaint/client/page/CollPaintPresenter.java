@@ -120,10 +120,15 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     public void onLineUpdated(LineUpdate update) {
         view.drawUpdate(update);
         /* Window.alert("Received line update " + update.info()); */
-        Log.debug("Received line update: " + update.info());        
+        Log.debug("Received line update: " + update.info());
     }
 
     protected void sendLineUpdate(LineUpdate data) {
+        if (data == null || (data.getSource() == null)) {
+            Log.warn("Tried to send null update");
+            return;
+        }
+        Log.debug("Sending " + data.info());
         service.updateLine(data, new EmptyCallback<Void>());
     }
     
