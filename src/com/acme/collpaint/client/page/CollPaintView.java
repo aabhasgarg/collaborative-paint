@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -81,7 +82,9 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     private Canvas canvas = null;
     private Canvas backBuffer = null;
     private final CssColor redrawColor = CssColor.make("rgba(200,200,200,0.6)");
-    private boolean lockRedraw = false;
+    
+    private int canvasWidth = 0;
+    private int canvasHeight = 0;    
     
     private UpdatesSender sender = null;
     
@@ -198,9 +201,10 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         
         canvas.addMouseMoveHandler(new MouseMoveHandler() {
             @Override public void onMouseMove(MouseMoveEvent event) {
+                if (currentLine == null) return;
                 sender.lineUpdated(
-                    updateCurrentLine(event.getRelativeX(canvas.getElement()),
-                                      event.getRelativeY(canvas.getElement()))
+                    updateCurrentLine(getWidthPercent(event),
+                                      getHeightPercent(event))
                 );
                 event.preventDefault();                
             }
@@ -208,9 +212,10 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         
         canvas.addMouseUpHandler(new MouseUpHandler() {
             @Override public void onMouseUp(MouseUpEvent event) {
+                if (currentLine == null) return;                
                 sender.lineFinished(
-                    finishCurrentLine(event.getRelativeX(canvas.getElement()),
-                                      event.getRelativeY(canvas.getElement()))                                      
+                    finishCurrentLine(getWidthPercent(event),
+                                      getHeightPercent(event))                                      
                 );
                 event.preventDefault();                
             }
@@ -218,9 +223,10 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         
         canvas.addMouseOutHandler(new MouseOutHandler() {
             @Override public void onMouseOut(MouseOutEvent event) {
+                if (currentLine == null) return;                
                 sender.lineFinished(
-                    finishCurrentLine(event.getRelativeX(canvas.getElement()),
-                                      event.getRelativeY(canvas.getElement()))    
+                    finishCurrentLine(getWidthPercent(event),
+                                      getHeightPercent(event))    
                 );
                 event.preventDefault();                
             }
@@ -229,23 +235,37 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         return true;
     }
     
-    protected void updateCanvasSize() {
-        int canvasWidth = Window.getClientWidth(); // canvasHolder.getOffsetWidth()
-        int canvasHeight = (int)(Window.getClientHeight() * 0.65); // 65% of height        
+    protected void updateCanvasSize() {        
+        canvasWidth = Window.getClientWidth(); // canvasHolder.getOffsetWidth()
+        canvasHeight = (int)(Window.getClientHeight() * 0.65); // 65% of height        
         
         canvas.setWidth(canvasWidth + "px");
         canvas.setCoordinateSpaceWidth(canvasWidth);        
         canvas.setHeight(canvasHeight + "px");
         canvas.setCoordinateSpaceHeight(canvasHeight);
         
+        Log.debug("catched resize, will redraw (" + canvasWidth + "x" +
+                                                    canvasHeight + ")");        
+        
         redrawCanvas(canvasWidth, canvasHeight);
     }
     
     protected void redrawCanvas(int width, int height) {
         final Context2d context = canvas.getContext2d();
-        final Context2d bufContext = backBuffer.getContext2d();
+        //final Context2d bufContext = backBuffer.getContext2d();
         
-        bufContext.setFillStyle(redrawColor);
+        context.setFillStyle(redrawColor);
+        context.fillRect(0, 0, width, height);
+        
+        if (currentLine != null) {
+            Line.draw(context, currentLine, width, height);
+        }
+        
+        for (Line line: drawnLines.values()) {
+            Line.draw(context, line, width, height);            
+        }               
+        
+        /* bufContext.setFillStyle(redrawColor);
         bufContext.fillRect(0, 0, width, height);
         
         if (currentLine != null) {
@@ -256,7 +276,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
             Line.draw(bufContext, line, width, height);            
         }
         
-        context.drawImage(bufContext.getCanvas(), 0, 0);
+        context.drawImage(bufContext.getCanvas(), 0, 0, width, height); */
     }
     
     @Override
@@ -275,7 +295,15 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     @Override
     public HasClickHandlers getLogoutButton() { return logout; }
     
-    private Line startNewLine(int startX, int startY) {        
+    private double getWidthPercent(MouseEvent<?> source) {
+        return source.getRelativeX(canvas.getElement()) / canvasWidth;        
+    };
+    
+    private double getHeightPercent(MouseEvent<?>  source) {
+        return source.getRelativeY(canvas.getElement()) / canvasHeight;
+    };    
+    
+    private Line startNewLine(double startX, double startY) {        
         if (currentLine != null) return null;
         lastLineId += 1;
         final Line newLine = new Line();
@@ -290,14 +318,14 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         return currentLine;
     }
 
-    private Line updateCurrentLine(int endX, int endY) {
+    private Line updateCurrentLine(double endX, double endY) {
         if (currentLine == null) return null;
         currentLine.setEnd(endX, endY);
         Log.debug("Updated line " + currentLine.info());        
         return currentLine;
     }
 
-    private Line finishCurrentLine(int endX, int endY) {
+    private Line finishCurrentLine(double endX, double endY) {
         if (currentLine == null) return null;
         final Line finishedLine = currentLine;
         finishedLine.setEnd(endX, endY);

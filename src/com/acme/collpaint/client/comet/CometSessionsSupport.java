@@ -22,7 +22,6 @@ import java.io.Serializable;
 public interface CometSessionsSupport {
     
     public interface MessageWithAuthor extends Serializable {
-        public void setAuthor(String username);
         public String getAuthor();
     }
 

@@ -96,8 +96,6 @@ public abstract class CometSessionsSupportServlet extends RemoteServiceServlet i
              throw new CometSessionException("not logged in: no http session username");
         }
         
-        message.setAuthor(username);
-        
         for (CometSession session : users.values()) {
             session.enqueue(message);
         }
