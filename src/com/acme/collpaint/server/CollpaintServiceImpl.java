@@ -30,7 +30,7 @@ public class CollpaintServiceImpl extends CometSessionsSupportServlet
     public void updateLine(double startX, double startY, double endX, double endY)
             throws CometSessionException, CollPaintException {
         final LineUpdate lineUpdate = new LineUpdate();
-        lineUpdate.setState(State.STARTED);
+        lineUpdate.setState(State.DRAWING);
         lineUpdate.setStartX(startX);
         lineUpdate.setStartY(startY);
         lineUpdate.setEndX(endX);

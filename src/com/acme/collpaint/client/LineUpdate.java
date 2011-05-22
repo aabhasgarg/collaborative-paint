@@ -23,13 +23,13 @@ import com.acme.collpaint.client.comet.CometSessionsSupport.MessageWithAuthor;
  */
 public class LineUpdate implements Serializable, MessageWithAuthor {
     
-    public enum State { STARTED, UPDATING, FINISHED }
+    public enum State { DRAWING, FINISHED }
     
     private static final long serialVersionUID = -7456299417172643586L;
     
     private String author;
     private int lineId;
-    private State state = State.STARTED;
+    private State state = State.DRAWING;
     
     private double width;
     private double startX;

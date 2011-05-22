@@ -19,7 +19,7 @@ package com.acme.collpaint.client.comet;
  */
 public class CometSessionException extends Exception {
 
-    private final String username;
+    private String username;
     
     public CometSessionException() { this(""); }
     
@@ -32,6 +32,9 @@ public class CometSessionException extends Exception {
         this.username = username;
     }    
     
-    public String getUsername() { return username; } 
+    public String getUsername() { return username; }
+    
+    @Override
+    public String getMessage() { return "[" + username + "] " + super.getMessage(); }
     
 }

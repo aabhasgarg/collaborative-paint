@@ -13,6 +13,7 @@ import net.zschech.gwt.comet.server.CometSession;
 
 import com.acme.collpaint.client.comet.CometSessionException;
 import com.acme.collpaint.client.comet.CometSessionsSupport;
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -54,6 +55,8 @@ public abstract class CometSessionsSupportServlet extends RemoteServiceServlet i
             throw new CometSessionException(username, 
                     "User: " + username + " already logged in");
         }
+        
+        Log.info(username + " is logged in");
     }
 
 
@@ -78,6 +81,8 @@ public abstract class CometSessionsSupportServlet extends RemoteServiceServlet i
         
         users.remove(username, cometSession);
         httpSession.invalidate();
+        
+        Log.info(username + " is logged out");        
     }
     
     @Override
@@ -96,7 +101,9 @@ public abstract class CometSessionsSupportServlet extends RemoteServiceServlet i
         
         for (CometSession session : users.values()) {
             session.enqueue(message);
-        }        
+        }
+        
+        Log.debug("message from " + username + " has been sent to all");        
     }
     
     protected HttpSession getSession() {

@@ -5,6 +5,7 @@ import net.zschech.gwt.comet.client.CometSerializer;
 
 import com.acme.collpaint.client.comet.CollPaintCometListener;
 import com.acme.collpaint.client.comet.CollPaintCometSerializer;
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,7 +44,7 @@ public class CollaborativePaint implements EntryPoint {
             }
             
             @Override
-            public void onFailure(Throwable caught) { }
+            public void onFailure(Throwable caught) { handle(caught); }
 	        
 	    });
 	    
@@ -67,7 +68,11 @@ public class CollaborativePaint implements EntryPoint {
                     public void onSuccess(Void result) { }
                     
                     @Override
-                    public void onFailure(Throwable caught) { }
+                    public void onFailure(Throwable caught) { handle(caught); }
                 });	    
+	}
+	
+	protected void handle(Throwable error) {
+	    Log.error(error.getMessage());
 	}
 }
