@@ -22,8 +22,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface CollPaintServiceAsync {
 
-    public void updateLine(double startX, double startY,
-                           double endX, double endY,
+    public void updateLine(LineUpdate data,
                            AsyncCallback<Void> callback);
     
     public void getUsername(AsyncCallback<String> callback);

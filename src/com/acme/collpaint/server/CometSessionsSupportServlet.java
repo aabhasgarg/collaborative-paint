@@ -41,8 +41,8 @@ public abstract class CometSessionsSupportServlet extends RemoteServiceServlet i
           
         return (String) httpSession.getAttribute("username");
     }
-
-    @Override
+    
+    @Override // hard login
     public void login(String username) throws CometSessionException {
         HttpSession httpSession = getSessionOrCreate();
         CometSession cometSession = getCometSessionOrCreate(httpSession);
@@ -57,8 +57,7 @@ public abstract class CometSessionsSupportServlet extends RemoteServiceServlet i
         }
         
         Log.info(username + " is logged in");
-    }
-
+    } 
 
     @Override
     public void logout(String username) throws CometSessionException {

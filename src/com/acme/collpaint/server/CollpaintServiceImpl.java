@@ -6,7 +6,6 @@ package com.acme.collpaint.server;
 import com.acme.collpaint.client.CollPaintException;
 import com.acme.collpaint.client.CollPaintService;
 import com.acme.collpaint.client.LineUpdate;
-import com.acme.collpaint.client.LineUpdate.State;
 import com.acme.collpaint.client.comet.CometSessionException;
 
 /**
@@ -27,16 +26,9 @@ public class CollpaintServiceImpl extends CometSessionsSupportServlet
                                   implements CollPaintService {    
 
     @Override
-    public void updateLine(double startX, double startY, double endX, double endY)
+    public void updateLine(LineUpdate data)
             throws CometSessionException, CollPaintException {
-        final LineUpdate lineUpdate = new LineUpdate();
-        lineUpdate.setState(State.DRAWING);
-        lineUpdate.setStartX(startX);
-        lineUpdate.setStartY(startY);
-        lineUpdate.setEndX(endX);
-        lineUpdate.setEndY(endY);
-        
-        sendToAll(lineUpdate);
+        sendToAll(data);
     }
 
 }

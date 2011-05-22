@@ -7,12 +7,8 @@ import com.acme.collpaint.client.CollPaintServiceAsync;
 import com.acme.collpaint.client.LineUpdate;
 import com.acme.collpaint.client.comet.CollPaintCometListener.CollPaintEventsReceiver;
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * <dl>
@@ -31,7 +27,18 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class CollPaintPresenter implements CollPaintEventsReceiver {
     
     public interface Display {
+        void updateLoginStatus(String username);
         
+        void disableControls();
+        void enableControls();
+        void prepareCanvas();
+        
+        void setUpdatesSender(UpdatesSender updatesSender);
+        void drawUpdate(LineUpdate update);
+    }
+    
+    public interface UpdatesSender {
+        void lineUpdate(LineUpdate data);
     }
     
     private final CollPaintServiceAsync service;
@@ -43,13 +50,12 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
         this.view = view;
     }
 
-    @Override
-    public void onLineUpdated(LineUpdate update) {
-        Window.alert("Received line update " + update.info());
-        Log.debug("Received line update: " + update.info());        
-    }
-
     public void launch() {
+        view.disableControls();        
+        view.updateLoginStatus(null);
+        
+        // TODO: restore session if it exists
+        
         final String username = Window.prompt("Login", "Enter Username");
         if (username == null || username.isEmpty()) {
             Window.alert("You _must_ log in");
@@ -64,21 +70,31 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     }
     
     protected void whenLoggedIn(String username) {
-        Button sendButton = new Button("Send line update",
-                new ClickHandler() {                    
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        tryToUpdateLine(0.4, 0.3, 0.5, 0.6);
-                    }
-                });
-        RootPanel.get().add(sendButton);        
+        view.updateLoginStatus(username);
+        view.enableControls();
+        view.prepareCanvas();
+        view.setUpdatesSender(new UpdatesSender() {
+
+            @Override
+            public void lineUpdate(LineUpdate data) {
+                sendLineUpdate(data);
+            }
+            
+        });
     }
     
-    protected void tryToUpdateLine(double startX, double startY, double endX, double endY) {
-        service.updateLine(startX, startY, endX, endY, 
-                new HandlingCallback<Void>() {
-                    @Override public void onSuccess(Void result) { }                    
-                });     
+    @Override
+    public void onLineUpdated(LineUpdate update) {
+        view.drawUpdate(update);
+        /* Window.alert("Received line update " + update.info()); */
+        Log.debug("Received line update: " + update.info());        
+    }
+
+    protected void sendLineUpdate(LineUpdate data) {
+        service.updateLine(data, 
+                    new HandlingCallback<Void>() {
+                        @Override public void onSuccess(Void result) { }                    
+                    });
     }
     
     protected abstract class HandlingCallback<T> implements AsyncCallback<T> {

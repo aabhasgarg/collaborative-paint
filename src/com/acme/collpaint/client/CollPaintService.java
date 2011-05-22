@@ -26,7 +26,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("service")
 public interface CollPaintService extends RemoteService, CometSessionsSupport {
     
-    public void updateLine(double startX, double startY,
-                           double endX, double endY) throws CometSessionException, CollPaintException;
+    public void updateLine(LineUpdate data) throws CometSessionException, CollPaintException;
     
 }
