@@ -7,6 +7,8 @@ import com.acme.collpaint.client.CollPaintServiceAsync;
 import com.acme.collpaint.client.LineUpdate;
 import com.acme.collpaint.client.comet.CollPaintCometListener.CollPaintEventsReceiver;
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -52,6 +54,7 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     public void launch() {
         view.enableControls(false);        
         view.updateLoginStatus(null);
+        //view.prepareCanvas();
         
         // TODO: restore session if it exists
         
@@ -68,7 +71,14 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
         });
     }
     
-    protected void whenLoggedIn(String username) {
+    protected void whenLoggedIn(final String username) {
+        Window.addCloseHandler(new CloseHandler<Window>() {
+            @Override
+            public void onClose(CloseEvent<Window> event) {
+                service.logout(username, new EmptyCallback<Void>());
+            }
+        });
+        
         view.updateLoginStatus(username);
         view.setUpdatesSender(new UpdatesSender() {
 
@@ -90,15 +100,16 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     }
 
     protected void sendLineUpdate(LineUpdate data) {
-        service.updateLine(data, 
-                    new HandlingCallback<Void>() {
-                        @Override public void onSuccess(Void result) { }                    
-                    });
+        service.updateLine(data, new EmptyCallback<Void>());
     }
     
     protected abstract class HandlingCallback<T> implements AsyncCallback<T> {
         @Override public void onFailure(Throwable caught) { handle(caught); };
     }
+    
+    protected class EmptyCallback<T> extends HandlingCallback<T> {
+        @Override public void onSuccess(T result) { };
+    }    
     
     protected void handle(Throwable error) {
         Log.error(error.getMessage());

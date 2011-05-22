@@ -6,9 +6,14 @@ package com.acme.collpaint.client.page;
 import com.acme.collpaint.client.LineUpdate;
 import com.acme.collpaint.client.page.CollPaintPresenter.UpdatesSender;
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -46,6 +51,8 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     @UiField FlowPanel canvasHolder;
     
     private Canvas canvas = null;
+    private final CssColor redrawColor = CssColor.make("rgba(200,200,200,0.6)");
+    
     private UpdatesSender sender = null;
     
     public enum Thickness { NORMAL(0.6),
@@ -105,7 +112,47 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
 
     @Override
     public void prepareCanvas() {
+        canvas = Canvas.createIfSupported();
         
+        if (canvas == null) {
+            canvasHolder.add(new Label("Sorry, your browser doesn't support the HTML5 Canvas element"));
+            return;
+        }
+        
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override public void onResize(ResizeEvent event) {
+                updateCanvasSize();                
+            }
+        });
+        
+        updateCanvasSize();
+        
+        canvasHolder.add(canvas);
+                
+    }
+    
+    protected void updateCanvasSize() {
+        int canvasWidth = Window.getClientWidth(); // canvasHolder.getOffsetWidth()
+        int canvasHeight = (int)(Window.getClientHeight() * 0.65); // 65% of height        
+        
+        canvas.setWidth(canvasWidth + "px");
+        canvas.setCoordinateSpaceWidth(canvasWidth);        
+        canvas.setHeight(canvasHeight + "px");
+        canvas.setCoordinateSpaceHeight(canvasHeight);
+        
+        redrawCanvas(canvasWidth, canvasHeight);
+    }
+    
+    /* protected void redrawCanvas() {
+        redrawCanvas(Window.getClientWidth(),, 
+                    (int)(Window.getClientHeight() * 0.65));
+    } */
+    
+    protected void redrawCanvas(int width, int height) {
+        final Context2d context = canvas.getContext2d();
+        
+        context.setFillStyle(redrawColor);
+        context.fillRect(0, 0, width, height);        
     }
     
     @Override
