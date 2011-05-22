@@ -34,8 +34,9 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
         
     }
     
-    public LineUpdate(Line source) { 
-        this.source = source;
+    public LineUpdate(Line source, State state) {
+        this.state = state;
+        this.source = source;        
     }
     
     public String info() {

@@ -3,12 +3,27 @@
  */
 package com.acme.collpaint.client.page;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.acme.collpaint.client.Line;
 import com.acme.collpaint.client.LineUpdate;
 import com.acme.collpaint.client.page.CollPaintPresenter.UpdatesSender;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -49,6 +64,10 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     @UiField ListBox thicknessBox;
     
     @UiField FlowPanel canvasHolder;
+    
+    private final Map<Color, Button> colorButtons = new HashMap<Color, Button>();
+    private Color curColor = Color.BLACK;
+    private Thickness curThickness = Thickness.NORMAL;
     
     private Canvas canvas = null;
     private final CssColor redrawColor = CssColor.make("rgba(200,200,200,0.6)");
@@ -93,23 +112,48 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                                  thickness.name());
         }
         
-        for (Color color: Color.values()) {
+        thicknessBox.addChangeHandler(new ChangeHandler() {
+            @Override public void onChange(ChangeEvent event) {
+                curThickness = 
+                    Thickness.valueOf(
+                            thicknessBox.getValue(thicknessBox.getSelectedIndex()));
+            }
+        });
+        
+        for (final Color color: Color.values()) {
             final Button colorButton = new Button();
             colorButton.setEnabled(false);
             colorButton.setText(color.name()); // TODO: set background color
+            colorButtons.put(color, colorButton);
             colors.add(colorButton);
+            
+            colorButton.addClickHandler(new ClickHandler() {
+                @Override public void onClick(ClickEvent event) {
+                    colorButtons.get(curColor).setEnabled(true);
+                    curColor = color;
+                    colorButtons.get(curColor).setEnabled(false);
+                }
+            });
         }
+    }
+    
+    @Override
+    public void updateLoginStatus(String username) {
+        loginStatus.setText(username != null ? ("logged in as " + username) : "not logged in");
+        logout.setEnabled(username != null);
     }
 
     @Override
     public void enableControls(boolean enable) {
         clearCanvas.setEnabled(enable);
         thicknessBox.setEnabled(enable);
-        for (Widget child: colors) {
-            if (child instanceof Button) ((Button) child).setEnabled(enable); 
+        for (Button button: colorButtons.values()) {
+            button.setEnabled(enable); 
         }
+        
+        if (enable) colorButtons.get(curColor).setEnabled(false);        
     }
-
+    
     @Override
     public void prepareCanvas() {
         canvas = Canvas.createIfSupported();
@@ -125,10 +169,37 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
             }
         });
         
+        canvasHolder.add(canvas);
+
         updateCanvasSize();
         
-        canvasHolder.add(canvas);
-                
+        canvas.addMouseDownHandler(new MouseDownHandler() {
+            @Override public void onMouseDown(MouseDownEvent event) {
+                sender.lineUpdated(
+                    startNewLine(event.getRelativeX(canvas.getElement()),
+                                 event.getRelativeY(canvas.getElement()))
+                );
+            }
+        });
+        
+        canvas.addMouseMoveHandler(new MouseMoveHandler() {
+            @Override public void onMouseMove(MouseMoveEvent event) {
+                sender.lineUpdated(
+                    updateCurrentLine(event.getRelativeX(canvas.getElement()),
+                                      event.getRelativeY(canvas.getElement()))
+                );
+            }
+        });
+        
+        canvas.addMouseUpHandler(new MouseUpHandler() {
+            @Override public void onMouseUp(MouseUpEvent event) {
+                sender.lineFinished(
+                    finishCurrentLine(event.getRelativeX(canvas.getElement()),
+                                      event.getRelativeY(canvas.getElement()))    
+                );
+            }
+        });
+        
     }
     
     protected void updateCanvasSize() {
@@ -164,11 +235,23 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     public void setUpdatesSender(UpdatesSender sender) {
         this.sender = sender;
     }
-
+    
     @Override
-    public void updateLoginStatus(String username) {
-        loginStatus.setText(username != null ? ("logged in as " + username) : "not logged in");
-        logout.setEnabled(username != null);
+    public HasClickHandlers getLogoutButton() { return logout; }
+    
+    private Line startNewLine(int endX, int endY) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private Line updateCurrentLine(int endX, int endY) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private Line finishCurrentLine(int endX, int endY) {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

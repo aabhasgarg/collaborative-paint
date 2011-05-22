@@ -4,9 +4,14 @@
 package com.acme.collpaint.client.page;
 
 import com.acme.collpaint.client.CollPaintServiceAsync;
+import com.acme.collpaint.client.Line;
 import com.acme.collpaint.client.LineUpdate;
+import com.acme.collpaint.client.LineUpdate.State;
 import com.acme.collpaint.client.comet.CollPaintCometListener.CollPaintEventsReceiver;
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
@@ -30,6 +35,7 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     
     public interface Display {
         void updateLoginStatus(String username);
+        HasClickHandlers getLogoutButton();
         
         void enableControls(boolean enable);
         void prepareCanvas();
@@ -39,7 +45,8 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     }
     
     public interface UpdatesSender {
-        void lineUpdate(LineUpdate data);
+        void lineFinished(Line line);
+        void lineUpdated(Line line);
     }
     
     private final CollPaintServiceAsync service;
@@ -69,6 +76,15 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
                 whenLoggedIn(username);
             }           
         });
+        
+        view.getLogoutButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                service.logout(username, new EmptyCallback<Void>());
+            }
+            
+        });
     }
     
     protected void whenLoggedIn(final String username) {
@@ -83,8 +99,15 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
         view.setUpdatesSender(new UpdatesSender() {
 
             @Override
-            public void lineUpdate(LineUpdate data) {
-                sendLineUpdate(data);
+            public void lineUpdated(Line line) {
+                LineUpdate update = new LineUpdate(line, State.DRAWING);
+                sendLineUpdate(update);
+            }
+
+            @Override
+            public void lineFinished(Line line) {
+                LineUpdate update = new LineUpdate(line, State.FINISHED);
+                sendLineUpdate(update);
             }
             
         });
