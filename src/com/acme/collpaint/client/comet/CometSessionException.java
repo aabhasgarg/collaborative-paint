@@ -21,6 +21,8 @@ public class CometSessionException extends Exception {
 
     private final String username;
     
+    public CometSessionException() { this(""); }
+    
     public CometSessionException(String message) {
         this(null, message);
     }

@@ -3,6 +3,7 @@
  */
 package com.acme.collpaint.client;
 
+import com.acme.collpaint.client.comet.CometSessionsSupport.MessageWithAuthor;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -24,5 +25,10 @@ public interface CollPaintServiceAsync {
     public void updateLine(double startX, double startY,
                            double endX, double endY,
                            AsyncCallback<Void> callback);
+    
+    public void getUsername(AsyncCallback<String> callback);
+    public void login(String username, AsyncCallback<Void> callback);
+    public void logout(String username, AsyncCallback<Void> callback);
+    public void sendToAll(MessageWithAuthor message, AsyncCallback<Void> callback);
     
 }

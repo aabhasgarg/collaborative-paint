@@ -21,8 +21,8 @@ import com.acme.collpaint.client.comet.CometSessionException;
  */
 public class CollPaintException extends CometSessionException {
     
-    public CollPaintException(String message) {
-        super(message);
-    }
+    public CollPaintException() { this(""); }
+    
+    public CollPaintException(String message) { super(message); }
 
 }
