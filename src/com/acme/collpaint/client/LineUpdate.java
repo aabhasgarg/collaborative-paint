@@ -27,49 +27,20 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
     
     private static final long serialVersionUID = -7456299417172643586L;
     
-    private String author;
-    private int lineId;
     private State state = State.DRAWING;
+    private Line source;
     
-    private double thickness;
+    public LineUpdate() {
+        
+    }
     
-    private double red;
-    private double green;
-    private double blue;
-    
-    private double startX;
-    private double startY;
-    private double endX;
-    private double endY;
+    public LineUpdate(Line source) { 
+        this.source = source;
+    }
     
     public String info() {
-        return  "u: " + author +
-               " l: " + lineId +
-               " s: " + state.name() +
-               " w: " + thickness +
-               " cr: " + red +
-               " cb: " + blue +
-               " cg: " + green +               
-               " sx: " + startX +
-               " sy: " + startY +
-               " ex: " + endX +
-               " ey: " + endY;
-     }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public int getLineId() {
-        return lineId;
-    }
-
-    public void setLineId(int lineId) {
-        this.lineId = lineId;
+        return source.info() +
+               " s: " + state.name();
     }
 
     public State getState() {
@@ -80,60 +51,12 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
         this.state = state;
     }
 
-    public double getThickness() {
-        return thickness;
+    public String getAuthor() {
+        return source.getAuthor();
     }
 
-    public void setThickness(double width) {
-        this.thickness = width;
-    }
-
-    public double getStartX() {
-        return startX;
-    }
-    
-    public double getStartY() {
-        return startY;
-    }
-
-    public void setStart(double startX, double startY) {
-        this.startX = startX;
-        this.startY = startY;
-    }
-
-    public void setStartY(double startY) {
-        this.startY = startY;
-    }
-
-    public double getEndX() {
-        return endX;
-    }
-
-    public double getEndY() {
-        return endY;
-    }
-
-    public void setEnd(double endX, double endY) {
-        this.endX = endX;
-        this.endY = endY;
-    }
-    
-    public double getRed() { 
-        return red;
-    }
-    
-    public double getBlue() { 
-        return blue;
-    }    
-    
-    public double getGreen() { 
-        return green;
-    }
-    
-    public void setColor(double red, double blue, double green) {
-        this.red = red;
-        this.blue = blue;
-        this.green = green;
+    public void setAuthor(String author) {
+        source.setAuthor(author);
     }
 
 }
