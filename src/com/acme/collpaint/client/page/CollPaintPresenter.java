@@ -38,7 +38,7 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
         HasClickHandlers getLogoutButton();
         
         void enableControls(boolean enable);
-        void prepareCanvas();
+        boolean prepareCanvas();
         
         void setUpdatesSender(UpdatesSender sender);
         void drawUpdate(LineUpdate update);
@@ -111,8 +111,9 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
             }
             
         });
-        view.enableControls(true);        
-        view.prepareCanvas();
+        if (view.prepareCanvas()) {
+            view.enableControls(true);
+        }
     }
     
     @Override

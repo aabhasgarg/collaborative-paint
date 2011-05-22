@@ -22,6 +22,8 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -69,8 +71,16 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     private Color curColor = Color.BLACK;
     private Thickness curThickness = Thickness.NORMAL;
     
+    private String currentUser;
+    private Line currentLine;    
+    private int lastLineId = 0;    
+    // key is: "<username>/<lineId>"
+    private Map<String, Line> drawnLines = new HashMap<String, Line>();
+    
     private Canvas canvas = null;
+    private Canvas backBuffer = null;
     private final CssColor redrawColor = CssColor.make("rgba(200,200,200,0.6)");
+    private boolean lockRedraw = false;
     
     private UpdatesSender sender = null;
     
@@ -139,6 +149,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     
     @Override
     public void updateLoginStatus(String username) {
+        currentUser = username;
         loginStatus.setText(username != null ? ("logged in as " + username) : "not logged in");
         logout.setEnabled(username != null);
     }
@@ -155,12 +166,13 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     }
     
     @Override
-    public void prepareCanvas() {
+    public boolean prepareCanvas() {
         canvas = Canvas.createIfSupported();
+        backBuffer = Canvas.createIfSupported();
         
         if (canvas == null) {
             canvasHolder.add(new Label("Sorry, your browser doesn't support the HTML5 Canvas element"));
-            return;
+            return false;
         }
         
         Window.addResizeHandler(new ResizeHandler() {
@@ -200,6 +212,16 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
             }
         });
         
+        canvas.addMouseOutHandler(new MouseOutHandler() {
+            @Override public void onMouseOut(MouseOutEvent event) {
+                sender.lineFinished(
+                    finishCurrentLine(event.getRelativeX(canvas.getElement()),
+                                      event.getRelativeY(canvas.getElement()))    
+                );
+            }
+        });        
+        
+        return true;
     }
     
     protected void updateCanvasSize() {
@@ -214,21 +236,29 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         redrawCanvas(canvasWidth, canvasHeight);
     }
     
-    /* protected void redrawCanvas() {
-        redrawCanvas(Window.getClientWidth(),, 
-                    (int)(Window.getClientHeight() * 0.65));
-    } */
-    
     protected void redrawCanvas(int width, int height) {
         final Context2d context = canvas.getContext2d();
+        final Context2d bufContext = backBuffer.getContext2d();
         
-        context.setFillStyle(redrawColor);
-        context.fillRect(0, 0, width, height);        
+        bufContext.setFillStyle(redrawColor);
+        bufContext.fillRect(0, 0, width, height);
+        
+        if (currentLine != null) {
+            Line.draw(bufContext, currentLine, width, height);
+        }
+        
+        for (Line line: drawnLines.values()) {
+            Line.draw(bufContext, line, width, height);            
+        }
+        
+        context.drawImage(bufContext.getCanvas(), 0, 0);
     }
     
     @Override
     public void drawUpdate(LineUpdate update) {
-        
+        drawnLines.put(update.getAuthor() + "/"
+                       + update.getLineId(), 
+                       update.getSource());
     }    
 
     @Override
@@ -239,19 +269,35 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     @Override
     public HasClickHandlers getLogoutButton() { return logout; }
     
-    private Line startNewLine(int endX, int endY) {
-        // TODO Auto-generated method stub
-        return null;
+    private Line startNewLine(int startX, int startY) {
+        if (currentLine != null) return null;
+        lastLineId += 1;
+        final Line newLine = new Line();
+        newLine.setLineId(lastLineId);
+        newLine.setColor(curColor.r, curColor.g, curColor.b);
+        newLine.setThickness(curThickness.value);
+        newLine.setStart(startX, startY);
+        newLine.setEnd(startX, startY);
+        currentLine = newLine;        
+        return currentLine;
     }
 
     private Line updateCurrentLine(int endX, int endY) {
-        // TODO Auto-generated method stub
-        return null;
+        if (currentLine == null) return null;
+        currentLine.setEnd(endX, endY);
+        return currentLine;
     }
 
     private Line finishCurrentLine(int endX, int endY) {
-        // TODO Auto-generated method stub
-        return null;
+        if (currentLine == null) return null;
+        final Line finishedLine = currentLine;
+        finishedLine.setEnd(endX, endY);
+        if (currentUser != null) {
+            drawnLines.put(currentUser + "/" + finishedLine.getLineId(), 
+                           finishedLine);
+        }
+        currentLine = null;
+        return finishedLine;
     }
     
 }

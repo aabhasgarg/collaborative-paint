@@ -59,5 +59,17 @@ public class LineUpdate implements Serializable, MessageWithAuthor {
     public void setAuthor(String author) {
         source.setAuthor(author);
     }
+    
+    public int getLineId() {
+        return source.getLineId();
+    }
+    
+    public void setLineId(int lineId) {
+        source.setLineId(lineId);
+    }
+    
+    public Line getSource() {
+        return source;
+    }
 
 }
