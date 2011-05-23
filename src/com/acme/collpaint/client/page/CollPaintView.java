@@ -81,7 +81,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     
     private Canvas canvas = null;
     private Canvas backBuffer = null;
-    private final CssColor redrawColor = CssColor.make("rgba(200,200,200,0.6)");
+    private final CssColor redrawColor = CssColor.make("rgba(200,200,200,0.8)");
     
     private int canvasWidth = 0;
     private int canvasHeight = 0;    
@@ -102,8 +102,8 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                         RED(1.0, 0.0, 0.0), 
                         BLUE(0.0, 1.0, 0.0),
                         GREEN(0.0, 0.0, 0.1),
-                        LIGHT_GRAY(0.33, 0.33, 0.33),
-                        DARK_GRAY(0.66, 0.66, 0.66);    
+                        LIGHT_GRAY(0.66, 0.66, 0.66),
+                        DARK_GRAY(0.33, 0.33, 0.33);    
         public final double r;
         public final double g;
         public final double b;
@@ -269,7 +269,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         
         for (Line line: drawnLines.values()) {
             Line.draw(context, line, width, height);            
-        }               
+        }              
         
         /* bufContext.setFillStyle(redrawColor);
         bufContext.fillRect(0, 0, width, height);
@@ -282,7 +282,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
             Line.draw(bufContext, line, width, height);            
         }
         
-        context.drawImage(bufContext.getCanvas(), 0, 0, width, height); */
+        context.drawImage(bufContext.getCanvas(), 0, 0); */
     }
     
     @Override
@@ -343,6 +343,17 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         currentLine = null;
         Log.debug("Finished line " + finishedLine.info());
         return finishedLine;
+    }
+
+    @Override
+    public void forgetData() {
+        drawnLines.clear();
+        redrawCanvas(canvasWidth, canvasHeight);
+    }
+
+    @Override
+    public HasClickHandlers getClearButton() {
+        return clearCanvas;
     }
     
 }

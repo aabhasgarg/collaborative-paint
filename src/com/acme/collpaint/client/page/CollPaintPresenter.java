@@ -36,12 +36,14 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
     public interface Display {
         void updateLoginStatus(String username);
         HasClickHandlers getLogoutButton();
+        HasClickHandlers getClearButton();        
         
         void enableControls(boolean enable);
         boolean prepareCanvas();
         
         void setUpdatesSender(UpdatesSender sender);
         void drawUpdate(LineUpdate update);
+        void forgetData();
     }
     
     public interface UpdatesSender {
@@ -82,8 +84,19 @@ public class CollPaintPresenter implements CollPaintEventsReceiver {
             @Override
             public void onClick(ClickEvent event) {
                 service.logout(username, new EmptyCallback<Void>());
+                view.updateLoginStatus(null);
+                view.enableControls(false);
             }
             
+        });
+        
+        view.getClearButton().addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                view.forgetData();
+                //TODO: service.clearAll();                
+            }
         });
     }
     
