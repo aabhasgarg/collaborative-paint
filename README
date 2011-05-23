@@ -1,5 +1,9 @@
 [written with GWT 2.2]
 
+Run configuration
+
+-remoteUI "${gwt_remote_ui_server_port}:${unique_id}" -logLevel INFO -codeServerPort 9997 -port 8888 -war /home/shamansir/Workspace/collaborative-paint/war com.acme.collpaint.CollaborativePaint
+
 нужно написать на гвите приложение для совместного рисования. заходишь на сайт, 
 там почти во весь экран канвас по которому можно рисовать. скажем где-нибудь 
 справа (или слева) вверху (вне канваса) кнопка: Clear. когда жмешь на Clear то 
