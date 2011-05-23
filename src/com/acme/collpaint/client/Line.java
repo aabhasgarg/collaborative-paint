@@ -130,10 +130,15 @@ public class Line implements Serializable {
     }
     
     private void draw(Context2d context, int ctxWidth, int ctxHeight) {
-        context.moveTo(startX * ctxWidth, startY * ctxHeight);
+        context.setLineWidth(thickness);        
         context.setStrokeStyle(getColor());
-        context.setLineWidth(thickness * 10);
+        
+        context.beginPath();
+        context.moveTo(startX * ctxWidth, startY * ctxHeight);
         context.lineTo(endX * ctxWidth, endY * ctxHeight);
+        context.closePath();
+        
+        context.stroke();
     }
     
     public static void draw(Context2d context, Line line,

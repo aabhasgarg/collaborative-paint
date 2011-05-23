@@ -192,9 +192,10 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         canvas.addMouseDownHandler(new MouseDownHandler() {
             @Override public void onMouseDown(MouseDownEvent event) {
                 sender.lineUpdated(
-                    startNewLine(event.getRelativeX(canvas.getElement()),
-                                 event.getRelativeY(canvas.getElement()))
+                    startNewLine(getWidthPercent(event),
+                                 getHeightPercent(event))
                 );
+                redrawCanvas(canvasWidth, canvasHeight);
                 event.preventDefault();
             }
         });
@@ -206,6 +207,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                     updateCurrentLine(getWidthPercent(event),
                                       getHeightPercent(event))
                 );
+                redrawCanvas(canvasWidth, canvasHeight);
                 event.preventDefault();                
             }
         });
@@ -217,6 +219,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                     finishCurrentLine(getWidthPercent(event),
                                       getHeightPercent(event))                                      
                 );
+                redrawCanvas(canvasWidth, canvasHeight);                
                 event.preventDefault();                
             }
         });
@@ -228,6 +231,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
                     finishCurrentLine(getWidthPercent(event),
                                       getHeightPercent(event))    
                 );
+                redrawCanvas(canvasWidth, canvasHeight);
                 event.preventDefault();                
             }
         });        
@@ -251,6 +255,8 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     }
     
     protected void redrawCanvas(int width, int height) {
+        if (canvas == null) return; 
+        
         final Context2d context = canvas.getContext2d();
         //final Context2d bufContext = backBuffer.getContext2d();
         
@@ -285,6 +291,7 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         drawnLines.put(update.getAuthor() + "/"
                        + update.getLineId(), 
                        update.getSource());
+        redrawCanvas(canvasWidth, canvasHeight);
     }    
 
     @Override
@@ -296,11 +303,11 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
     public HasClickHandlers getLogoutButton() { return logout; }
     
     private double getWidthPercent(MouseEvent<?> source) {
-        return source.getRelativeX(canvas.getElement()) / canvasWidth;        
+        return (double)source.getRelativeX(canvas.getElement()) / (double)canvasWidth;        
     };
     
     private double getHeightPercent(MouseEvent<?>  source) {
-        return source.getRelativeY(canvas.getElement()) / canvasHeight;
+        return (double)source.getRelativeY(canvas.getElement()) / (double)canvasHeight;
     };    
     
     private Line startNewLine(double startX, double startY) {        
@@ -314,14 +321,14 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         newLine.setStart(startX, startY);
         newLine.setEnd(startX, startY);
         Log.debug("Started line " + newLine.info());        
-        currentLine = newLine;        
+        currentLine = newLine;
         return currentLine;
     }
 
     private Line updateCurrentLine(double endX, double endY) {
         if (currentLine == null) return null;
         currentLine.setEnd(endX, endY);
-        Log.debug("Updated line " + currentLine.info());        
+        Log.debug("Updated line " + currentLine.info());
         return currentLine;
     }
 
@@ -332,9 +339,9 @@ public class CollPaintView extends Composite implements CollPaintPresenter.Displ
         if (currentUser != null) {
             drawnLines.put(currentUser + "/" + finishedLine.getLineId(), 
                            finishedLine);
-        }
-        Log.debug("Finished line " + finishedLine.info());        
+        }        
         currentLine = null;
+        Log.debug("Finished line " + finishedLine.info());
         return finishedLine;
     }
     
