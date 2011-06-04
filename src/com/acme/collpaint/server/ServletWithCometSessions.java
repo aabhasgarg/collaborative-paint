@@ -22,7 +22,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * <dt>Package:</dt> <dd>com.acme.collpaint.server</dd>
  * </dl>
  *
- * <code>CometSessionsSupportServlet</code>
+ * <code>ServletWithCometSessions</code>
  *
  * <p>Description</p>
  *
@@ -30,7 +30,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @date May 22, 2011 2:28:54 PM 
  *
  */
-public abstract class CometSessionsSupportServlet extends RemoteServiceServlet implements CometSessionsSupport {
+public abstract class ServletWithCometSessions extends RemoteServiceServlet implements CometSessionsSupport {
 
     private ConcurrentMap<String, CometSession> users = new ConcurrentHashMap<String, CometSession>();
 

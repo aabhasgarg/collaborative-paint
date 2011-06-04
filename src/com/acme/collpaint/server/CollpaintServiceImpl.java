@@ -22,7 +22,7 @@ import com.acme.collpaint.client.comet.CometSessionException;
  * @date May 20, 2011 11:51:15 PM 
  *
  */
-public class CollpaintServiceImpl extends CometSessionsSupportServlet 
+public class CollpaintServiceImpl extends ServletWithCometSessions 
                                   implements CollPaintService {    
 
     @Override
